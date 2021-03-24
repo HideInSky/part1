@@ -34,8 +34,8 @@ public class AddNote extends AppCompatActivity {
     Calendar calendar;
     EditText edt_title, edt_times;
 
-    String todaysDate = "NA";
-    String title = "New Note";
+    String date = "NA";
+    String title = "New Question";
     String times = "0";
     String img1Path = "NA";
 
@@ -64,7 +64,7 @@ public class AddNote extends AppCompatActivity {
         // calendar to get date
         calendar = Calendar.getInstance();
         // c.get(Calendar.YEAR)
-        todaysDate = calendar.get(Calendar.YEAR) + "/" + (calendar.get(Calendar.MONTH)+1) + "/"
+        date = calendar.get(Calendar.YEAR) + "/" + (calendar.get(Calendar.MONTH)+1) + "/"
                 + calendar.get(Calendar.DAY_OF_MONTH);
 
 
@@ -79,10 +79,16 @@ public class AddNote extends AppCompatActivity {
                 Intent i = new Intent(AddNote.this, AddSolution.class);
                 title = edt_title.getText().toString();
                 times = edt_times.getText().toString();
-                i.putExtra("date", todaysDate);
+
+                if (title == null || title == "")
+                    title = "New Question";
+                if (times == null || times == "")
+                    times = "0";
+
+                i.putExtra("date", date);
                 i.putExtra("title", title);
                 i.putExtra("img1Path", img1Path);
-                i.putExtra("times", String.valueOf(times));
+                i.putExtra("times", times);
 
                 startActivity(i);
             }
@@ -115,7 +121,7 @@ public class AddNote extends AppCompatActivity {
 
     public static String getPhotoName(){
         photoNameIndex++;
-        return "question"+String.valueOf(photoNameIndex);
+        return "question"+ photoNameIndex;
     }
 
     @Override
@@ -130,6 +136,8 @@ public class AddNote extends AppCompatActivity {
         }
 
     }
+
+
 
     private void cameraHelper(){
         String filename = getPhotoName();

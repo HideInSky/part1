@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         // set recycler view's adapter
         adapter = new Adapter(this, notes);
         recyclerView.setAdapter(adapter);
+
+
     }
 
     @Override

@@ -23,24 +23,28 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-public class AddSolution extends AppCompatActivity {
+public class EditSolution extends AppCompatActivity {
     Toolbar toolbar;
     ImageView imageView2;
-    String img2Path = "NA";
+
     static int photoNameIndex = 0;
     // request code for getting first photo
-    final static int REQUEST_CODE_2 = 2;
+    final static int REQUEST_CODE_4 = 4;
+
     EditText edt_conclusion;
+    long ID = 0;
     String date = "NA";
-    String title = "NA";
-    String times = "NA";
+    String title = "New Question";
+    String times = "0";
     String img1Path = "NA";
-    String conclusion = "NA";
+    String img2Path = "NA";
+    String conclusion = "Conclusion";
+    Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_solution);
+        setContentView(R.layout.activity_edit_solution);
 
         //toolbar, title is default in xmlfile
         toolbar = findViewById(R.id.toolbar_solution);
@@ -49,26 +53,31 @@ public class AddSolution extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //set default image
-        imageView2 = findViewById(R.id.img_2);
-        imageView2.setImageResource(R.drawable.avatar_12);
-
-        // set textview of conclusion
-        edt_conclusion = findViewById(R.id.txt_conclusion);
+        imageView2 = findViewById(R.id.img_2_edit);
 
 
+
+        // get corresponding note value from EditNote
         Intent i = getIntent();
         date = i.getStringExtra("date");
         title = i.getStringExtra("title");
-
-
-        img1Path = i.getStringExtra("img1Path");
         times = i.getStringExtra("times");
-        Log.d("DATE HERE ", date);
-        Log.d("TITLE HERE ", title);
-        Log.d("IMG1PATH HERE ", img1Path);
-        Log.d("TIMES HERE ", times);
+        img1Path = i.getStringExtra("img1Path");
+        img2Path = i.getStringExtra("img2Path");
+        conclusion = i.getStringExtra("conclusion");
+        ID = i.getLongExtra("ID", 0);
 
+        // set textview of conclusion
+        edt_conclusion = findViewById(R.id.txt_conclusion_edit);
+        edt_conclusion.setText(conclusion);
 
+        // set default image
+        if (!img2Path.equals("NA")) {
+            Bitmap bitmap = BitmapFactory.decodeFile(img2Path);
+            imageView2.setImageBitmap(bitmap);
+        } else{
+            imageView2.setImageResource(R.drawable.avatar_12);
+        }
 
 
 
@@ -108,7 +117,7 @@ public class AddSolution extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_2 && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CODE_4 && resultCode == RESULT_OK){
             if (!img2Path.equals("NA")) {
                 Bitmap bitmap = BitmapFactory.decodeFile(img2Path);
                 imageView2.setImageDrawable(null);
@@ -120,24 +129,24 @@ public class AddSolution extends AppCompatActivity {
 
     public static String getPhotoName(){
         photoNameIndex++;
-        return "solution"+String.valueOf(photoNameIndex);
+        return "solution"+photoNameIndex;
     }
 
     public void go_to_main(){
-        Intent i = new Intent(AddSolution.this, MainActivity.class);
+        Intent i = new Intent(EditSolution.this, MainActivity.class);
         startActivity(i);
     }
 
     private void saveHelper(){
-
+        // set the note
         conclusion = edt_conclusion.getText().toString();
-        if (conclusion == null || conclusion == "")
+        if (conclusion == null || conclusion =="")
             conclusion = "Conclusion";
+
+        note = new Note(ID, title, times, date, conclusion, img1Path, img2Path);
         NoteDatabase db = new NoteDatabase(this);
-        Note note = new Note(title, times, date, conclusion, img1Path, img2Path);
-        note.printNote();
-        long noteID = db.addNote(note);
-        Toast.makeText(this, "This note is saved" + noteID, Toast.LENGTH_SHORT).show();
+        db.editNote(note);
+
     }
 
     private void cameraHelper(){
@@ -146,11 +155,11 @@ public class AddSolution extends AppCompatActivity {
         try {
             File imageFile = File.createTempFile(filename, ".jpg", storageDirectory);
             img2Path = imageFile.getAbsolutePath();
-            Uri imageUri = FileProvider.getUriForFile(AddSolution.this,
+            Uri imageUri = FileProvider.getUriForFile(EditSolution.this,
                     "com.example.part1.fileprovider", imageFile);
             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             i.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            startActivityForResult(i, REQUEST_CODE_2);
+            startActivityForResult(i, REQUEST_CODE_4);
         } catch (IOException e) {
             e.printStackTrace();
         }

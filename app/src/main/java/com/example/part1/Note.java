@@ -25,6 +25,16 @@ public class Note {
 
 
 
+    Note(long ID, String questionTitle, String doneTimes, String dateOfCreate, String questionConclusion,
+         String img1Path, String img2Path){
+        this.ID = ID;
+        this.questionTitle = questionTitle;
+        this.doneTimes = doneTimes;
+        this.dateOfCreate = dateOfCreate;
+        this.questionConclusion = questionConclusion;
+        this.img1Path = img1Path;
+        this.img2Path = img2Path;
+    }
     Note(String questionTitle, String doneTimes, String dateOfCreate, String questionConclusion,
          String img1Path, String img2Path){
         this.questionTitle = questionTitle;

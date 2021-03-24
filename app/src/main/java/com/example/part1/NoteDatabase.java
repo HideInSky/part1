@@ -48,7 +48,19 @@ public class NoteDatabase extends SQLiteOpenHelper {
         db.execSQL(query);
 
     }
+    public Note getNote(long id){
+        // select * from database where ID is 1
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(DB_TABLE, new String[]{KEY_ID, KEY_TITLE, KEY_TIMES,KEY_DATE, KEY_CONCLUSION, KEY_IMAGE1_PATH, KEY_IMAGE2_PATH}, KEY_ID+"=?",
+                new String[]{String.valueOf(id)}, null, null, null);
 
+        if (cursor!= null)
+            cursor.moveToFirst();
+        return new Note(cursor.getLong(0), cursor.getString(1),
+                cursor.getString(2), cursor.getString(3),
+                cursor.getString(4), cursor.getString(5),
+                cursor.getString(6));
+    }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion>=newVersion)
@@ -81,6 +93,21 @@ public class NoteDatabase extends SQLiteOpenHelper {
         }
         return allNotes;
     }
+
+    public boolean editNote(Note note){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues c = new ContentValues();
+        c.put(KEY_TITLE, note.getQuestionTitle());
+        c.put(KEY_TIMES, note.getDoneTimes());
+        c.put(KEY_DATE, note.getDateOfCreate());
+        c.put(KEY_CONCLUSION, note.getQuestionConclusion());
+        c.put(KEY_IMAGE1_PATH, note.getImg1Path());
+        c.put(KEY_IMAGE2_PATH, note.getImg2Path());
+        db.update(DB_TABLE, c, KEY_ID+"=?",
+                new String[]{String.valueOf(note.getID())});
+        return true;
+    }
+
 
     public long addNote(Note note){
         SQLiteDatabase db = this.getWritableDatabase();
