@@ -1,6 +1,18 @@
 package com.example.part1;
 
+import android.util.Log;
+
 public class Note {
+    private long ID;
+
+    public long getID() {
+        return ID;
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
     private String questionTitle;
     private String doneTimes;
     private String dateOfCreate;
@@ -69,4 +81,18 @@ public class Note {
     public void setImg2Path(String img2Path) {
         this.img2Path = img2Path;
     }
+
+    public void printNote(){
+        String print = "ID " + ID + "\n"+
+                "questionTitle " + questionTitle + "\n"+
+                "doneTimes " + doneTimes + "\n"+
+                "dateOfCreate " + dateOfCreate + "\n"+
+                "questionConclusion " + questionConclusion + "\n"+
+                "img1Path " + img1Path + "\n"+
+                "img2Path " + img2Path + "\n";
+        Log.d("printNote", print);
+
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.part1;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NoteDatabase extends SQLiteOpenHelper {
     private static final int DB_VERSION = 2;
@@ -53,6 +57,49 @@ public class NoteDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public List<Note> getNotes(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Note> allNotes = new ArrayList<>();
+
+        // select * from database name
+
+        String query = "SELECT * FROM " + DB_TABLE;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()){
+            do {
+                Note note = new Note();
+                note.setID(cursor.getLong(0));
+                note.setQuestionTitle(cursor.getString(1));
+                note.setDoneTimes(cursor.getString(2));
+                note.setDateOfCreate(cursor.getString(3));
+                note.setQuestionConclusion(cursor.getString(4));
+                note.setImg1Path(cursor.getString(5));
+                note.setImg2Path(cursor.getString(6));
+                allNotes.add(note);
+            } while(cursor.moveToNext());
+
+        }
+        return allNotes;
+    }
+
+    public long addNote(Note note){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues c = new ContentValues();
+        c.put(KEY_TITLE, note.getQuestionTitle());
+        c.put(KEY_TIMES, note.getDoneTimes());
+        c.put(KEY_DATE, note.getDateOfCreate());
+        c.put(KEY_CONCLUSION, note.getQuestionConclusion());
+        c.put(KEY_IMAGE1_PATH, note.getImg1Path());
+        c.put(KEY_IMAGE2_PATH, note.getImg2Path());
+
+
+        long ID = db.insert(DB_TABLE, null, c);
+
+        //Log
+        Log.d("inserted", " ID -> " + ID);
+        return ID;
+
+    }
     /**
      * Helper function that parses a given table into a string
      * and returns it for easy printing. The string consists of

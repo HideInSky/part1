@@ -3,6 +3,8 @@ package com.example.part1;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
+    List<Note> notes;
+    RecyclerView recyclerView;
+    Adapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +28,18 @@ public class MainActivity extends AppCompatActivity {
         //toolbar
         toolbar = findViewById(R.id.toolbar_errorbook);
         setSupportActionBar(toolbar);
+
+        //Note database
+        NoteDatabase db = new NoteDatabase(this);
+        notes = db.getNotes();
+
+        //recycler view
+        recyclerView = findViewById(R.id.rcyc_notes);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // set recycler view's adapter
+        adapter = new Adapter(this, notes);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -36,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mn_add, menu);
+        getMenuInflater().inflate(R.menu.menu_add, menu);
         return true;
     }
 }
