@@ -96,6 +96,7 @@ public class AddNote extends AppCompatActivity {
 
 
 
+
     }
 
     @Override

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -29,6 +32,7 @@ public class EditNote extends AppCompatActivity {
     Toolbar toolbar;
     ImageView imageView1;
     static int photoNameIndex = 0;
+
 
     // request code for getting first photo
     final static int REQUEST_CODE_3 = 3;
@@ -43,6 +47,7 @@ public class EditNote extends AppCompatActivity {
     String times = "0";
     String date = "NA";
     long ID = 0;
+
 
 
     @Override
